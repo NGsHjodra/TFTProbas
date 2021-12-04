@@ -20,7 +20,7 @@ def main():
 
     st.text('\n')
     st.write('**_Note_**: Our odds calculation take into account the golds spent to buy a copy.')
-    st.write('_Example_: You have 50 golds to spend. The odd displayed to find 3+ copies of your 4-cost champion is after a maximum of 19 rolls (you spent 12 golds buying copies).')
+    st.write('_Example_: You have 50 golds to spend. The odd displayed to find 3+ copies of your 4 cost champion is after a maximum of 19 rolls (you spent 12 golds buying copies).')
 
 
 def select_params(data):
@@ -33,7 +33,7 @@ def select_params(data):
     # Level
     level = st.sidebar.selectbox(
         'Select your level',
-        tuple(range(1, 10)),
+        tuple(range(1, 12)),
         index=7,
     )
 
@@ -63,7 +63,7 @@ def draw_chart(prob_tier, N_champ, n_champ, N_tier, n_tier, gold, cost):
         size = np.min((10, N_champ - n_champ + 1))
         P = build_univariate_transition_matrix(N_tier - n_tier - n_champ, N_champ - n_champ, prob_tier)
 
-        P_n = [np.linalg.matrix_power(P, int(np.floor((gold - i * cost) / 2))) for i in range(size)]
+        P_n = [np.linalg.matrix_power(P, max(int(np.floor((gold - i * cost) / 2)), 0)) for i in range(size)]
         prb = pd.DataFrame({
             'Proba': P_n[0][0, :][1:],
             'Probability': pd.Series([np.sum(P_n[i][0, i:]) * 100 for i in range(size)][1:]).round(2),
