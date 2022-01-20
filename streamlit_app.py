@@ -7,7 +7,7 @@ import matchmaking
 
 
 PAGES = {
-    "Rolling odds": roll,
+    "Rolling odds (patch 12.2)": roll,
     # "Chosen Roll": chosen_roll, # obsolete set 4.5
     # "Matchmaking": matchmaking,
 }
@@ -17,8 +17,6 @@ tft_image = st.sidebar.image("assets/jayce_set6.png", width=300)
 left, right = st.beta_columns(2)
 with left:
     st.header("Teamfight Tactics tools - Set 6")
-# with right:
-#     st.write("*patch 11.*")
 
 st.markdown(
     f"""
