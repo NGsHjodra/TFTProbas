@@ -1,15 +1,13 @@
+import json
+from collections import Counter
+
 import numpy as np
 import pandas as pd
 import plotly.express as px
 import streamlit as st
-import json
-from collections import Counter
-
 from plotly.subplots import make_subplots
-import plotly.graph_objects as go
 
 from helpers import roll_page_layout
-from matrix_utils import build_univariate_transition_matrix
 
 
 def main():

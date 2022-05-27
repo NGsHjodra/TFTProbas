@@ -185,7 +185,6 @@
     "championId": "TFT4_Kennen",
     "cost": 3,
     "chosen_traits": [
-      
       "Keeper"
     ]
   },
@@ -347,7 +346,6 @@
     "championId": "TFT4_Shen",
     "cost": 4,
     "chosen_traits": [
-      
       "Adept",
       "Mystic"
     ]

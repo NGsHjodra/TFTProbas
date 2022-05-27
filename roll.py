@@ -3,24 +3,31 @@ import pandas as pd
 import plotly.express as px
 import streamlit as st
 
-from helpers import roll_page_layout
+from helpers import roll_page_layout, change_doots_odds
 from matrix_utils import build_univariate_transition_matrix
+
 
 def main():
     roll_page_layout()
 
     data = pd.read_csv("tier_stats.csv", header=0, index_col=0)
 
-    tier, level, n_champ, n_tier, gold = select_params(data)
+    tier, level, n_champ, n_tier, gold, dragon, doots = select_params(data)
+
+    if doots != 0:
+        data.iloc[level + 1] = change_doots_odds(doots, data.iloc[
+            level + 1].tolist())  # offset of 1 to get the odds per level in data
 
     data_tier = data[str(tier)]
 
+    dragon = 2 if dragon else 1
+
     draw_chart(data_tier[str(level)] / 100, data_tier['pool'], n_champ,
-               data_tier['N_champs'] * data_tier['pool'], n_tier, gold, tier)
+               data_tier['N_champs'] * data_tier['pool'], n_tier, gold, dragon * tier)
 
     st.text('\n')
     st.write('**_Note_**: Our odds calculation take into account the golds spent to buy a copy.')
-    st.write('_Example_: You have 50 golds to spend. The odd displayed to find 3+ copies of your 4 cost champion is after a maximum of 19 rolls (you spent 12 golds buying copies).')
+    # st.write('_Example_: You have 50 golds to spend. The odd displayed to find 3+ copies of your 4 cost champion is after a maximum of 19 rolls (you spent 12 golds buying copies).')
 
 
 def select_params(data):
@@ -30,6 +37,19 @@ def select_params(data):
         tuple(range(1, 6)),
         index=3,
     )
+    # Dragon
+    dragon = False
+    if tier >= 4:
+        dragon = st.sidebar.checkbox(
+            'Champion is a dragon',
+        )
+
+    doots = 0
+    if tier >= 3:
+        doots = st.sidebar.number_input(
+            'Number of Bard doots collected',
+            value=0, min_value=0, max_value=100)
+
     # Level
     level = st.sidebar.selectbox(
         'Select your level',
@@ -45,7 +65,7 @@ def select_params(data):
 
     # Number of cards of same tier already bought
     n_tier = st.sidebar.number_input(
-        f'Number of {tier} cost champions already out (excluding your champion)',
+        f'Number of {tier} tier champions already out (excluding your champion)',
         value=25, min_value=0, max_value=300)
 
     # Gold
@@ -53,7 +73,7 @@ def select_params(data):
         'How much gold to roll',
         value=50, min_value=1, max_value=100)
 
-    return tier, level, n_champ, n_tier, gold
+    return tier, level, n_champ, n_tier, gold, dragon, doots
 
 
 def draw_chart(prob_tier, N_champ, n_champ, N_tier, n_tier, gold, cost):
@@ -72,10 +92,15 @@ def draw_chart(prob_tier, N_champ, n_champ, N_tier, n_tier, gold, cost):
         prb = prb[prb.iloc[:, 1] > 0.05]  # keep columns > 0.05% probability
 
         fig2 = px.bar(prb, y='Probability', x='Number of copies', title="Odds to find your champion",
-                      text='Probability')
-        fig2.update_layout(yaxis=dict(range=[0, 100]), height=600, width=1000, xaxis={'tickmode': 'linear'})
+                      text='Probability', template='plotly_dark')
+        fig2.update_layout(yaxis=dict(range=[0, 100], showgrid=False), height=600, width=1000,
+                           xaxis={'tickmode': 'linear'},
+                           paper_bgcolor='rgba(0,0,0,0)',
+                           plot_bgcolor='rgba(0,0,0,0)',
+                           font_size=15,
+                           )
         fig2.update_traces(hovertemplate="At least %{x}: <b>%{y:.2f}</b> %<br><extra></extra>",
-                           texttemplate='<b>%{text:.2f}</b> %', textposition='outside')
+                           texttemplate='<b>%{text:.2f}</b> %', textposition='outside', marker_line_width=1.5)
 
         st.write(fig2)
 

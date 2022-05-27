@@ -1,17 +1,20 @@
 from collections import Counter
 
 import streamlit as st
+
 import SessionState
 
 ORDER = 0
 
+
 def page_layout(summoners):
     st.text("\n")
     st.text("\n")
-    st.text('Note: This tool is only useful when everyone is still alive. Indeed, you are assured to play one of the 3 players you least recently played.')
+    st.text(
+        'Note: This tool is only useful when everyone is still alive. Indeed, you are assured to play one of the 3 players you least recently played.')
     st.text("\n")
     st.text("\n")
-    left, right = st.beta_columns(2)
+    left, right = st.columns(2)
     if not all(summoners):
         st.subheader("Please enter every summoner name in the sidebar.")
     else:
@@ -37,7 +40,7 @@ def main():
     if not all(summoners):
         return
 
-    left, center, right = st.beta_columns(3)
+    left, center, right = st.columns(3)
 
     with left:
         for index, s in enumerate(summoners):
@@ -69,4 +72,3 @@ def main():
     with right:
         for p in possibilities:
             st.markdown(f'- **{p}**')
-
