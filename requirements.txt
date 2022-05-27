@@ -3,3 +3,4 @@ numpy
 pandas
 scipy
 plotly
+protobuf~=3.19.0
