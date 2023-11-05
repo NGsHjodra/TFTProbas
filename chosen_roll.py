@@ -11,7 +11,6 @@ from helpers import roll_page_layout
 
 
 def main():
-    st.write(st.__version__)
     roll_page_layout()
 
     data = pd.read_csv("tier_stats.csv", header=0, index_col=0)
