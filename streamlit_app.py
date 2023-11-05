@@ -1,9 +1,11 @@
 # Import pages
 import roll
+import chosen_roll
 from helpers import *
 
 PAGES = {
-    "Rolling odds (patch 12.11)": roll,
+    "Rolling odds (set 10 PBE)": roll,
+    "Headliners odds (set 10 PBE)": chosen_roll,
 }
 
 st.set_page_config(page_title='TFT tools', page_icon='assets/dragonlands.png', layout='wide',
@@ -27,20 +29,19 @@ st.markdown(
     unsafe_allow_html=True,
 )
 
-st.header("Teamfight Tactics odds tool - Set 7")
+st.header("TFT Odds Tool - Set 10")
 
-set_bg_hack("assets/set7_banner_blurred.png")
+# set_bg_hack("assets/set7_banner_blurred.png")
 
 left, right = st.columns(2)
 
-# st.sidebar.title('Navigation')
-# selection = st.sidebar.radio('', list(PAGES.keys()))
-page = PAGES[list(PAGES.keys())[0]]
+st.sidebar.title('Navigation')
+selection = st.sidebar.radio('', list(PAGES.keys()))
+page = PAGES[selection]
 page.main()
 
 github_repo = get_img_with_href('assets/github.png', 'https://github.com/sde-cdsp/TFTProbas', text="Project: ")
-credits = "by [LittleToof](https://twitter.com/Toof_pro), [Pas De Bol](https://twitter.com/PasDeBolTFT) & [Jibs](https://twitter.com/jibsremy)"
-
+credits = get_img_with_href('assets/xlogo.png', 'https://twitter.com/Toof_pro', text="Contact: ")
 st.text('\n')
 st.markdown("""<hr style="height:2px;border:none;color:white;" /> """, unsafe_allow_html=True)
 

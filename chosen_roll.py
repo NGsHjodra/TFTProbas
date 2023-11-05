@@ -11,6 +11,7 @@ from helpers import roll_page_layout
 
 
 def main():
+    st.write(st.__version__)
     roll_page_layout()
 
     data = pd.read_csv("tier_stats.csv", header=0, index_col=0)
@@ -19,7 +20,7 @@ def main():
     with open('champions.json', 'r') as file:
         traits = pd.DataFrame(json.load(file))
 
-    names, tiers, trait_ratio, level, n_champs, n_tiers = select_params(data, chosen_data, traits)
+    names, tiers, trait_ratio, level, n_champs, n_tiers, chosen_odds = select_params_chosen(data, chosen_data, traits)
 
     if not names:
         st.subheader("Select champion(s) in the sidebar")
@@ -30,12 +31,12 @@ def main():
         data_tier = data[str(tier)]
         prob = ratio * (chosen_data.iloc[level - 1][tier - 1] / 100)
         probs.append(
-            (data_tier['pool'] - n_champ) / (data_tier['N_champs'] * data_tier['pool'] - n_tier - n_champ) * 0.5 * prob)
+            (data_tier['pool'] - n_champ) / (data_tier['N_champs'] * data_tier['pool'] - n_tier - n_champ) * chosen_odds * prob)
 
     draw_chart(probs, names)
 
 
-def select_params(data, chosen_data, traits):
+def select_params_chosen(data, chosen_data, traits):
     # Level
     level = st.sidebar.selectbox(
         'Select your level',
@@ -69,9 +70,12 @@ def select_params(data, chosen_data, traits):
             f'Number of {tier} cost champions already out (excluding your champion)',
             value=25, min_value=0, max_value=300)
 
+    has_chosen = st.sidebar.checkbox(label="Already possess an Headliner?")
+    chosen_odds = 1 if not has_chosen else 0.25
+
     n_tiers = [n_tiers[str(tier)] for tier in tiers]
 
-    return names, tiers, traits_ratio, level, n_champs, n_tiers
+    return names, tiers, traits_ratio, level, n_champs, n_tiers, chosen_odds
 
 
 def draw_chart(probs, names):

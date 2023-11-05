@@ -3,7 +3,7 @@ import pandas as pd
 import plotly.express as px
 import streamlit as st
 
-from helpers import roll_page_layout, change_doots_odds
+from helpers import roll_page_layout
 from matrix_utils import build_univariate_transition_matrix
 
 
@@ -12,68 +12,67 @@ def main():
 
     data = pd.read_csv("tier_stats.csv", header=0, index_col=0)
 
-    tier, level, n_champ, n_tier, gold, dragon, doots = select_params(data)
+    tier, level, n_champ, n_tier, gold = select_params(data)
 
-    if doots != 0:
-        data.iloc[level + 1] = change_doots_odds(doots, data.iloc[
-            level + 1].tolist())  # offset of 1 to get the odds per level in data
+    # if doots != 0:
+        # data.iloc[level + 1] = change_doots_odds(doots, data.iloc[
+        #     level + 1].tolist())  # offset of 1 to get the odds per level in data
 
     data_tier = data[str(tier)]
 
-    dragon = 2 if dragon else 1
-
     draw_chart(data_tier[str(level)] / 100, data_tier['pool'], n_champ,
-               data_tier['N_champs'] * data_tier['pool'], n_tier, gold, dragon * tier)
+               data_tier['N_champs'] * data_tier['pool'], n_tier, gold, tier)
 
     st.text('\n')
-    st.write('**_Note_**: Our odds calculation take into account the golds spent to buy a copy.')
-    # st.write('_Example_: You have 50 golds to spend. The odd displayed to find 3+ copies of your 4 cost champion is after a maximum of 19 rolls (you spent 12 golds buying copies).')
+    st.write('**_Note_**: This calculation includes the amount of gold spent to buy a copy.')
+    # st.write('_Example_: You have 50 golds to spend. The odd displayed to find 3 or more copies of your 4 cost champion is after a maximum of 19 rolls (you spent 12 golds buying them).')
 
 
 def select_params(data):
     # Champion Tier
-    tier = st.sidebar.selectbox(
-        'Select the champion tier',
+    tier = st.sidebar.radio(
+        'Champion cost',
         tuple(range(1, 6)),
         index=3,
+        horizontal=True
     )
-    # Dragon
-    dragon = False
-    if tier >= 4:
-        dragon = st.sidebar.checkbox(
-            'Champion is a dragon',
-        )
-
-    doots = 0
-    if tier >= 3:
-        doots = st.sidebar.number_input(
-            'Number of Bard doots collected',
-            value=0, min_value=0, max_value=100)
+    # # Dragon
+    # dragon = False
+    # if tier >= 4:
+    #     dragon = st.sidebar.checkbox(
+    #         'Champion is a dragon',
+    #     )
+    #
+    # doots = 0
+    # if tier >= 3:
+    #     doots = st.sidebar.number_input(
+    #         'Number of Bard doots collected',
+    #         value=0, min_value=0, max_value=100)
 
     # Level
-    level = st.sidebar.selectbox(
-        'Select your level',
-        tuple(range(1, 12)),
-        index=7,
-    )
+    level = st.sidebar.slider(
+        'Level',
+        value=7,
+        min_value=1, max_value=11
+            )
 
     # Number of cards of the champion already bought
     nb_copies = data[str(tier)]['pool']
-    n_champ = st.sidebar.number_input(
-        'Number of copies of the champion already out',
-        value=3, min_value=0, max_value=nb_copies)
+    n_champ = st.sidebar.slider(
+        "Number of your champion's copies out of pool",
+        value=3, min_value=0, max_value=int(nb_copies))
 
     # Number of cards of same tier already bought
-    n_tier = st.sidebar.number_input(
-        f'Number of {tier} tier champions already out (excluding your champion)',
-        value=25, min_value=0, max_value=300)
+    n_tier = st.sidebar.slider(
+        f'Number of {tier} cost champions out of pool (excluding your champion)',
+        value=25, min_value=0, max_value=100)
 
     # Gold
-    gold = st.sidebar.number_input(
-        'How much gold to roll',
+    gold = st.sidebar.slider(
+        'Amount of gold to roll',
         value=50, min_value=1, max_value=100)
 
-    return tier, level, n_champ, n_tier, gold, dragon, doots
+    return tier, level, n_champ, n_tier, gold
 
 
 def draw_chart(prob_tier, N_champ, n_champ, N_tier, n_tier, gold, cost):
