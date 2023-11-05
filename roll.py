@@ -36,18 +36,6 @@ def select_params(data):
         index=3,
         horizontal=True
     )
-    # # Dragon
-    # dragon = False
-    # if tier >= 4:
-    #     dragon = st.sidebar.checkbox(
-    #         'Champion is a dragon',
-    #     )
-    #
-    # doots = 0
-    # if tier >= 3:
-    #     doots = st.sidebar.number_input(
-    #         'Number of Bard doots collected',
-    #         value=0, min_value=0, max_value=100)
 
     # Level
     level = st.sidebar.slider(
