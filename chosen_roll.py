@@ -100,19 +100,33 @@ def select_params_chosen(data, chosen_data, traits):
 
 def draw_chart(probs, names):
     prob = np.prod([1 - p for p in probs])
-    prb = pd.DataFrame(
+    prb = [
         {
-            "Probability": pd.Series([(1 - prob**i) * 100 for i in range(1, 51)]),
-            "Golds spent": [i for i in range(2, 102, 2)],
+            "name": "Any Headliner",
+            "Probability": (1 - prob**i) * 100,
+            "Golds spent": i * 2,
         }
-    )
+        for i in range(1, 51)
+    ]
+    headliners = prb
+    for i, (prob, name) in enumerate(zip(probs, names)):
+        headliners += [
+            {
+                "name": name,
+                "Probability": (1 - (1 - prob) ** i) * 100,
+                "Golds spent": i * 2,
+            }
+            for i in range(1, 51)
+        ]
+
+    df = pd.DataFrame(headliners)
 
     fig = px.line(
-        prb,
+        df,
         y="Probability",
         x="Golds spent",
-        title="Odds to find one of the desired Headliner",
-        text="Probability",
+        title="Odds to find one of the desired Headliners",
+        color="name",
     )
     fig.update_layout(
         yaxis=dict(range=[0, 100]),
@@ -121,6 +135,7 @@ def draw_chart(probs, names):
         xaxis={"tickmode": "linear", "dtick": 4, "range": [0, 100]},
         hovermode="x",
         title_x=0.4,
+        legend_title=None,
     )
     fig.update_traces(
         hovertemplate="Probability: <b>%{y:.2f}</b>%<br>Golds spent: <b>%{x}</b>",
@@ -129,46 +144,6 @@ def draw_chart(probs, names):
     )
 
     st.write(fig)
-
-    rows = max(math.ceil(len(names) / 2), 1)
-    cols = 2
-    traces = []
-    for i, (prob, name) in enumerate(zip(probs, names)):
-        prb = pd.DataFrame(
-            {
-                "Probability": pd.Series(
-                    [(1 - (1 - prob) ** i) * 100 for i in range(1, 51)]
-                ),
-                "Golds spent": [i for i in range(2, 102, 2)],
-            }
-        )
-        row = int((i + 2) / 2)
-        col = 1 if i % 2 == 0 else 2
-        fig = px.line(
-            prb,
-            y="Probability",
-            x="Golds spent",
-            title="Odds to find a Headliner %s with desired traits" % name,
-            text="Probability",
-        )
-        trace = fig["data"][0]
-        traces.append((trace, row, col))
-
-    if not names:
-        return
-    fig2 = make_subplots(rows=rows, cols=cols, subplot_titles=names)
-    for trace in traces:
-        fig2.add_trace(trace[0], row=trace[1], col=trace[2])
-    fig2.update_layout(height=600 * rows, width=1000, hovermode="x")
-    fig2.update_xaxes(title_text="Golds spent")
-    fig2.update_yaxes(title_text="Probability", range=[0, 100])
-    fig2.update_traces(
-        hovertemplate="Probability: <b>%{y:.2f}</b>%<br>Golds spent: <b>%{x}</b>",
-        text="",
-        mode="lines",
-    )
-
-    st.write(fig2)
 
 
 def build_champ_select(traits, level):
