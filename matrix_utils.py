@@ -4,9 +4,9 @@ from scipy.stats import hypergeom
 
 def build_univariate_transition_matrix(N, n, p):
     """
-    N (int): The number of remaining cards in the tier pool
-    n (int): The number of remaining desired champion card in the tier pool
-    p (float): The tier proba
+    N (int): The number of remaining cards in the cost pool
+    n (int): The number of remaining desired champion card in the cost pool
+    p (float): The cost proba
     """
     size = np.min((10, n + 1))
     transition_matrix = np.zeros((size, size))
@@ -25,9 +25,9 @@ def build_univariate_transition_matrix(N, n, p):
 def build_univariate_transition_matrix_row(i, N, n, p, size, n_cards=5):
     """
     i (int): row index
-    N (int): The number of remaining cards in the tier pool.
-    n (int): The number of remaining desired champion card in the tier pool.
-    p (float): The tier proba
+    N (int): The number of remaining cards in the cost pool.
+    n (int): The number of remaining desired champion card in the cost pool.
+    p (float): The cost proba
     size (int): size of the matrix
     n_cards (int): The number of cards to draw
     """

@@ -8,24 +8,24 @@ from matrix_utils import build_univariate_transition_matrix
 
 
 def main():
-    data = pd.read_csv("tier_stats.csv", header=0, index_col=0)
+    data = pd.read_csv("static_data/tier_stats.csv", header=0, index_col=0)
 
-    tier, level, n_champ, n_tier, gold = select_params(data)
+    cost, level, n_champ, n_cost, gold = select_params(data)
 
     # if doots != 0:
     # data.iloc[level + 1] = change_doots_odds(doots, data.iloc[
     #     level + 1].tolist())  # offset of 1 to get the odds per level in data
 
-    data_tier = data[str(tier)]
+    data_cost = data[str(cost)]
 
     draw_chart(
-        data_tier[str(level)] / 100,
-        data_tier["pool"],
+        data_cost[str(level)] / 100,
+        data_cost["pool"],
         n_champ,
-        data_tier["N_champs"] * data_tier["pool"],
-        n_tier,
+        data_cost["n_champs"] * data_cost["pool"],
+        n_cost,
         gold,
-        tier,
+        cost,
     )
 
     st.text("\n")
@@ -36,8 +36,8 @@ def main():
 
 
 def select_params(data):
-    # Champion Tier
-    tier = st.sidebar.radio(
+    # Champion cost
+    cost = st.sidebar.radio(
         "Champion cost", tuple(range(1, 6)), index=3, horizontal=True
     )
 
@@ -45,7 +45,7 @@ def select_params(data):
     level = st.sidebar.slider("Level", value=7, min_value=1, max_value=11)
 
     # Number of cards of the champion already bought
-    nb_copies = data[str(tier)]["pool"]
+    nb_copies = data[str(cost)]["pool"]
     n_champ = st.sidebar.slider(
         "Number of your champion's copies out of pool",
         value=3,
@@ -53,28 +53,26 @@ def select_params(data):
         max_value=int(nb_copies),
     )
 
-    # Number of cards of same tier already bought
-    n_tier = st.sidebar.slider(
-        f"Number of {tier} cost champions out of pool (excluding your champion)",
+    # Number of cards of same cost already bought
+    n_cost = st.sidebar.slider(
+        f"Number of {cost} cost champions out of pool (excluding your champion)",
         value=25,
         min_value=0,
         max_value=100,
     )
 
     # Gold
-    gold = st.sidebar.slider(
-        "Amount of gold to roll", value=50, min_value=1, max_value=100
-    )
+    gold = st.sidebar.slider("Gold", value=50, min_value=1, max_value=100)
 
-    return tier, level, n_champ, n_tier, gold
+    return cost, level, n_champ, n_cost, gold
 
 
-def draw_chart(prob_tier, N_champ, n_champ, N_tier, n_tier, gold, cost):
+def draw_chart(prob_cost, N_champ, n_champ, N_cost, n_cost, gold, cost):
     # Cumulative distribution function
-    if prob_tier > 0:
+    if prob_cost > 0:
         size = np.min((10, N_champ - n_champ + 1))
         P = build_univariate_transition_matrix(
-            N_tier - n_tier - n_champ, N_champ - n_champ, prob_tier
+            N_cost - n_cost - n_champ, N_champ - n_champ, prob_cost
         )
 
         P_n = [
