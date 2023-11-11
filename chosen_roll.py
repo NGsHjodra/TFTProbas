@@ -71,7 +71,7 @@ def select_params_chosen(data, chosen_data, traits):
         "Level",
         value=7,
         min_value=1,
-        max_value=11,
+        max_value=10,
     )
 
     # Gold
