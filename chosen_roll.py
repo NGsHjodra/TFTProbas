@@ -71,7 +71,7 @@ def select_params_chosen(data, chosen_data, traits):
     level = st.sidebar.slider(
         "Level",
         value=7,
-        min_value=1,
+        min_value=3,
         max_value=10,
     )
 
