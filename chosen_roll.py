@@ -41,7 +41,7 @@ def main():
         <a src="assets/tft_t_logo.png" style="text-decoration: none; cursor: default; font-weight:600; color: white;"> <img src="data:image/png;base64,{bin_str}" width=40>
         Select desired Headliner(s) in the settings</a>"""
         st.markdown(subheader, unsafe_allow_html=True)
-        draw_chart([0], [0], [], level, gold, False)
+        draw_chart([0], [], level, gold, False, [0])
         return
 
     probs, probs_next_lvl = [], []
@@ -54,15 +54,16 @@ def main():
             * chosen_odds
             * prob
         )
-        prob_next_lvl = trait_odd * (chosen_data.iloc[level].iloc[cost - 1] / 100)
-        probs_next_lvl.append(
-            (data_cost["pool"] - n_champ)
-            / (data_cost["n_champs"] * data_cost["pool"] - n_cost - n_champ)
-            * chosen_odds
-            * prob_next_lvl
-        )
+        if level < 10:
+            prob_next_lvl = trait_odd * (chosen_data.iloc[level].iloc[cost - 1] / 100)
+            probs_next_lvl.append(
+                (data_cost["pool"] - n_champ)
+                / (data_cost["n_champs"] * data_cost["pool"] - n_cost - n_champ)
+                * chosen_odds
+                * prob_next_lvl
+            )
 
-    draw_chart(probs, probs_next_lvl, names, level, gold, show_next_level)
+    draw_chart(probs, names, level, gold, show_next_level, probs_next_lvl)
 
 
 def select_params_chosen(data, chosen_data, traits):
@@ -133,7 +134,7 @@ def select_params_chosen(data, chosen_data, traits):
     )
 
 
-def draw_chart(probs, probs_next_lvl, names, level, gold, show_next_level):
+def draw_chart(probs, names, level, gold, show_next_level, probs_next_lvl=[0]):
     gold_to_next_lvl = XP_TO_NEXT_LEVEL[level]
     any_headliners = []
     if len(names) > 1:
