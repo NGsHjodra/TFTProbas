@@ -505,7 +505,7 @@
   },
   {
     "name": "Zed",
-    "championId": "TFT4b_Zed",
+    "championId": "TFT4_Zed",
     "cost": 2,
     "chosen_traits": [
       "Slayer"
