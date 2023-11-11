@@ -78,19 +78,20 @@ def select_params_chosen(data, chosen_data, traits):
     gold = st.sidebar.slider("Gold", value=100, min_value=1, max_value=150)
 
     chosen_odds = list(chosen_data.iloc[level - 1])
-    available_costs = [i + 1 for i in range(5) if chosen_odds[i] > 0]
-    available_traits = traits[traits["cost"].isin(available_costs)]
+    # available_costs = [i + 1 for i in range(5) if chosen_odds[i] > 0]
+    # available_traits = traits[traits["cost"].isin(available_costs)]
 
     has_chosen = st.sidebar.checkbox("Already possess an Headliner?")
-    show_next_level = st.sidebar.checkbox("Show next level odds?", 1)
+    show_next_level = st.sidebar.checkbox("Show next level odds?")
 
     champs = st.sidebar.multiselect(
         "Desired Headliner(s)",
-        build_champ_select(available_traits, level),
+        build_champ_select(traits, level),
     )
     champions = [champ.split(" - ")[0] for champ in champs]
 
-    names, costs, traits_odds = build_champ_info(champions, available_traits)
+    # names, costs, traits_odds = build_champ_info(champions, available_traits)
+    names, costs, traits_odds = build_champ_info(champions, traits)
 
     n_champs = []
     for champ, cost in zip(names, costs):
@@ -143,7 +144,7 @@ def draw_chart(probs, probs_next_lvl, names, level, gold, show_next_level):
                 "Probability": (1 - prob**i) * 100,
                 "Golds spent": i,
             }
-            for i in range(1, gold, 2)
+            for i in range(0, gold, 2)
         ]
         if gold_to_next_lvl < gold and show_next_level:
             prob_next_lvl = np.prod([1 - p for p in probs_next_lvl])
@@ -154,7 +155,7 @@ def draw_chart(probs, probs_next_lvl, names, level, gold, show_next_level):
                     "Probability": 0,
                     "Golds spent": i,
                 }
-                for i in range(1, gold_to_next_lvl, 2)
+                for i in range(0, gold_to_next_lvl, 2)
             ]
             any_headliners += [
                 {
@@ -173,7 +174,7 @@ def draw_chart(probs, probs_next_lvl, names, level, gold, show_next_level):
                 "Probability": (1 - (1 - prob) ** i) * 100,
                 "Golds spent": i,
             }
-            for i in range(1, gold, 2)
+            for i in range(0, gold, 2)
         ]
 
     if gold_to_next_lvl < gold and show_next_level:
@@ -184,7 +185,7 @@ def draw_chart(probs, probs_next_lvl, names, level, gold, show_next_level):
                     "Probability": 0,
                     "Golds spent": i,
                 }
-                for i in range(1, gold_to_next_lvl, 2)
+                for i in range(0, gold_to_next_lvl, 2)
             ]
             headliners += [
                 {
