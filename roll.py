@@ -44,8 +44,10 @@ def select_params(data):
     # Level
     level = st.sidebar.slider("Level", value=7, min_value=1, max_value=11)
 
-    # Number of cards of the champion already bought
     nb_copies = data[str(cost)]["pool"]
+    nb_champs_costs = data[str(cost)]["n_champs"]
+
+    # Number of copies of the champion already bought
     n_champ = st.sidebar.slider(
         "Number of your champion's copies out of pool",
         value=3,
@@ -58,7 +60,7 @@ def select_params(data):
         f"Number of {cost} cost champions out of pool (excluding your champion)",
         value=25,
         min_value=0,
-        max_value=100,
+        max_value=nb_copies * nb_champs_costs - n_champ,
     )
 
     # Gold
