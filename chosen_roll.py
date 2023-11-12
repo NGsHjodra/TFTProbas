@@ -59,12 +59,7 @@ def main():
                 * chosen_odds
                 * prob
             )
-            # print("pool:", data_cost["pool"])
-            # print("n_champ:", n_champ)
-            # print("n_cost:", n_cost)
-            # print("trait_odd", trait_odd)
-            # print("chosen_data", chosen_data.iloc[level - 1].iloc[cost - 1])
-            # print("prob", prob)
+
             if level < 10:
                 prob_next_lvl = trait_odd * (
                     chosen_data.iloc[level].iloc[cost - 1] / 100
@@ -160,7 +155,6 @@ def draw_chart(probs, names, level, gold, show_next_level, probs_next_lvl=[0]):
             }
             for i in range(0, gold, 2)
         ]
-        print(probs, prob_all, any_headliners)
         if gold_to_next_lvl < gold and show_next_level:
             prob_next_lvl = np.prod([1 - p for p in probs_next_lvl])
 
@@ -175,7 +169,7 @@ def draw_chart(probs, names, level, gold, show_next_level, probs_next_lvl=[0]):
             any_headliners += [
                 {
                     "name": f"Any Headliner_lvl_{level + 1}",
-                    "Probability": (1 - (prob_next_lvl ** (i - gold_to_next_lvl) / 2))
+                    "Probability": (1 - (prob_next_lvl ** ((i - gold_to_next_lvl) / 2)))
                     * 100,
                     "Golds spent": i,
                 }
