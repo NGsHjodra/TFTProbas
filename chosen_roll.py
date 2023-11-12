@@ -59,6 +59,12 @@ def main():
                 * chosen_odds
                 * prob
             )
+            # print("pool:", data_cost["pool"])
+            # print("n_champ:", n_champ)
+            # print("n_cost:", n_cost)
+            # print("trait_odd", trait_odd)
+            # print("chosen_data", chosen_data.iloc[level - 1].iloc[cost - 1])
+            # print("prob", prob)
             if level < 10:
                 prob_next_lvl = trait_odd * (
                     chosen_data.iloc[level].iloc[cost - 1] / 100
@@ -145,15 +151,16 @@ def draw_chart(probs, names, level, gold, show_next_level, probs_next_lvl=[0]):
     gold_to_next_lvl = XP_TO_NEXT_LEVEL[level]
     any_headliners = []
     if len(names) > 1:
-        prob = np.prod([1 - p for p in probs])
+        prob_all = np.prod([1 - p for p in probs])
         any_headliners = [
             {
                 "name": "Any Headliner",
-                "Probability": (1 - prob**i) * 100,
+                "Probability": (1 - prob_all ** (i / 2)) * 100,
                 "Golds spent": i,
             }
             for i in range(0, gold, 2)
         ]
+        print(probs, prob_all, any_headliners)
         if gold_to_next_lvl < gold and show_next_level:
             prob_next_lvl = np.prod([1 - p for p in probs_next_lvl])
 
@@ -168,7 +175,8 @@ def draw_chart(probs, names, level, gold, show_next_level, probs_next_lvl=[0]):
             any_headliners += [
                 {
                     "name": f"Any Headliner_lvl_{level + 1}",
-                    "Probability": (1 - prob_next_lvl ** (i - gold_to_next_lvl)) * 100,
+                    "Probability": (1 - (prob_next_lvl ** (i - gold_to_next_lvl) / 2))
+                    * 100,
                     "Golds spent": i,
                 }
                 for i in range(gold_to_next_lvl, gold, 2)
@@ -179,7 +187,7 @@ def draw_chart(probs, names, level, gold, show_next_level, probs_next_lvl=[0]):
         headliners += [
             {
                 "name": name,
-                "Probability": (1 - (1 - prob) ** i) * 100,
+                "Probability": (1 - (1 - prob) ** (i / 2)) * 100,
                 "Golds spent": i,
             }
             for i in range(0, gold, 2)
@@ -198,7 +206,8 @@ def draw_chart(probs, names, level, gold, show_next_level, probs_next_lvl=[0]):
             headliners += [
                 {
                     "name": name + f"_lvl_{level + 1}",
-                    "Probability": (1 - (1 - prob) ** (i - gold_to_next_lvl)) * 100,
+                    "Probability": (1 - (1 - prob) ** ((i - gold_to_next_lvl) / 2))
+                    * 100,
                     "Golds spent": i,
                 }
                 for i in range(gold_to_next_lvl, gold, 2)
@@ -215,8 +224,8 @@ def draw_chart(probs, names, level, gold, show_next_level, probs_next_lvl=[0]):
         )
         fig.update_layout(
             yaxis=dict(range=[0, 100]),
-            height=600,
-            width=1000,
+            height=550,
+            width=900,
             xaxis={"tickmode": "linear", "dtick": 4, "range": [0, gold]},
             hovermode="x",
             title_x=0.4,

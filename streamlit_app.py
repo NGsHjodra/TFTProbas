@@ -68,7 +68,7 @@ def set_body():
         unsafe_allow_html=True,
     )
 
-    left, right = st.columns(2)
+    left, right = st.columns(2, gap="large")
     with left:
         st.markdown(github_repo, unsafe_allow_html=True)
     with right:
@@ -87,10 +87,18 @@ def set_and_run_page():
     page.main()
 
 
+def set_footer():
+    st.write(
+        "<div style='position: fixed; bottom:10px; width: 850px; font-size:13px;'>This web app isn’t endorsed by Riot Games and doesn’t reflect the views or opinions of Riot Games or anyone officially involved in producing or managing League of Legends. League of Legends and Riot Games are trademarks or registered trademarks of Riot Games, Inc. League of Legends © Riot Games, Inc.</div>",
+        unsafe_allow_html=True,
+    )
+
+
 def main():
     set_css()
     set_body()
     set_and_run_page()
+    set_footer()
 
 
 if __name__ == "__main__":
