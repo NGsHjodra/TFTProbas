@@ -89,7 +89,7 @@ def set_and_run_page():
 
 def set_footer():
     st.write(
-        "<div style='position: fixed; bottom:10px; width: 850px; font-size:13px;'>This web app isn’t endorsed by Riot Games and doesn’t reflect the views or opinions of Riot Games or anyone officially involved in producing or managing League of Legends. League of Legends and Riot Games are trademarks or registered trademarks of Riot Games, Inc. League of Legends © Riot Games, Inc.</div>",
+        "<div style='bottom:10px; width: 850px; font-size:13px;'>This web app isn’t endorsed by Riot Games and doesn’t reflect the views or opinions of Riot Games or anyone officially involved in producing or managing League of Legends. League of Legends and Riot Games are trademarks or registered trademarks of Riot Games, Inc. League of Legends © Riot Games, Inc.</div>",
         unsafe_allow_html=True,
     )
 
