@@ -28,7 +28,6 @@ def main():
         cost,
     )
 
-    st.text("\n")
     st.write(
         "**_Note_**: This calculation includes the amount of golds spent to buy a copy."
     )
@@ -102,8 +101,8 @@ def draw_chart(prob_cost, N_champ, n_champ, N_cost, n_cost, gold, cost):
         )
         fig2.update_layout(
             yaxis=dict(range=[0, 100], showgrid=False),
-            height=600,
-            width=1000,
+            height=550,
+            width=900,
             xaxis={"tickmode": "linear"},
             paper_bgcolor="rgba(0,0,0,0)",
             plot_bgcolor="rgba(0,0,0,0)",
