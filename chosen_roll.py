@@ -47,21 +47,28 @@ def main():
     probs, probs_next_lvl = [], []
     for cost, n_champ, n_cost, trait_odd in zip(costs, n_champs, n_costs, trait_odds):
         data_cost = data[str(cost)]
-        prob = trait_odd * (chosen_data.iloc[level - 1].iloc[cost - 1] / 100)
-        probs.append(
-            (data_cost["pool"] - n_champ)
-            / (data_cost["n_champs"] * data_cost["pool"] - n_cost - n_champ)
-            * chosen_odds
-            * prob
-        )
-        if level < 10:
-            prob_next_lvl = trait_odd * (chosen_data.iloc[level].iloc[cost - 1] / 100)
-            probs_next_lvl.append(
+        if (data_cost["pool"] - n_champ) <= 2:
+            probs.append(0)
+            if level < 10:
+                probs_next_lvl.append(0)
+        else:
+            prob = trait_odd * (chosen_data.iloc[level - 1].iloc[cost - 1] / 100)
+            probs.append(
                 (data_cost["pool"] - n_champ)
                 / (data_cost["n_champs"] * data_cost["pool"] - n_cost - n_champ)
                 * chosen_odds
-                * prob_next_lvl
+                * prob
             )
+            if level < 10:
+                prob_next_lvl = trait_odd * (
+                    chosen_data.iloc[level].iloc[cost - 1] / 100
+                )
+                probs_next_lvl.append(
+                    (data_cost["pool"] - n_champ)
+                    / (data_cost["n_champs"] * data_cost["pool"] - n_cost - n_champ)
+                    * chosen_odds
+                    * prob_next_lvl
+                )
 
     draw_chart(probs, names, level, gold, show_next_level, probs_next_lvl)
 
