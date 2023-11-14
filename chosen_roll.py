@@ -10,7 +10,7 @@ from helpers import roll_page_layout, get_base64_of_bin_file
 from plotly.subplots import make_subplots
 
 
-XP_TO_NEXT_LEVEL = {3: 6, 4: 10, 5: 20, 6: 36, 7: 48, 8: 76, 9: 80, 10: 100}
+XP_TO_NEXT_LEVEL = {3: 6, 4: 10, 5: 20, 6: 36, 7: 48, 8: 80, 9: 84, 10: 100}
 
 
 def main():
