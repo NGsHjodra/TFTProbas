@@ -47,7 +47,7 @@ def main():
     probs, probs_next_lvl = [], []
     for cost, n_champ, n_cost, trait_odd in zip(costs, n_champs, n_costs, trait_odds):
         data_cost = data[str(cost)]
-        if (data_cost["pool"] - n_champ) <= 2:
+        if (data_cost["pool"] - n_champ) < data_cost["pool"] / 2:
             probs.append(0)
             if level < 10:
                 probs_next_lvl.append(0)
