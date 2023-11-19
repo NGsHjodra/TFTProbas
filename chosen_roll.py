@@ -89,7 +89,15 @@ def main():
                     ),
                 )
 
-    draw_chart(probs_pool, names, level, gold, show_next_level, probs_next_lvl_pool)
+    draw_chart(
+        probs_pool,
+        names,
+        level,
+        gold,
+        show_next_level,
+        chosen_odds,
+        probs_next_lvl_pool,
+    )
 
 
 """prob to NOT find desired headliner in a draw. We use the "pity" mechanism, that prevent an headliner to be proposed twice in a row."""
@@ -119,7 +127,13 @@ def compute_prob(
 
 
 def draw_chart(
-    probs_pool, names, level, gold, show_next_level, probs_next_lvl_pool=[0]
+    probs_pool,
+    names,
+    level,
+    gold,
+    show_next_level,
+    chosen_odds,
+    probs_next_lvl_pool=[0],
 ):
     from math import factorial
 
@@ -143,7 +157,7 @@ def draw_chart(
                 "Probability": (
                     1
                     - (prob_all * scaling_factor_multiple_champs_in_same_pool)
-                    ** (i / 2)
+                    ** (i * chosen_odds / 2)
                 )
                 * 100,
                 "Golds spent": i,
@@ -171,7 +185,7 @@ def draw_chart(
                                 prob_next_lvl_all
                                 * scaling_factor_multiple_champs_in_same_pool
                             )
-                            ** ((i - gold_to_next_lvl) / 2)
+                            ** ((i * chosen_odds - gold_to_next_lvl) / 2)
                         )
                     )
                     * 100,
@@ -185,7 +199,7 @@ def draw_chart(
         headliners += [
             {
                 "name": name,
-                "Probability": (1 - prob_pool[0] ** (i / 2)) * 100,
+                "Probability": (1 - prob_pool[0] ** (i * chosen_odds / 2)) * 100,
                 "Golds spent": i,
             }
             for i in range(0, gold, 2)
@@ -204,7 +218,9 @@ def draw_chart(
             headliners += [
                 {
                     "name": name + f"_lvl_{level + 1}",
-                    "Probability": (1 - prob_pool[0] ** ((i - gold_to_next_lvl) / 2))
+                    "Probability": (
+                        1 - prob_pool[0] ** ((i * chosen_odds - gold_to_next_lvl) / 2)
+                    )
                     * 100,
                     "Golds spent": i,
                 }
@@ -249,10 +265,6 @@ def select_params_chosen(data, chosen_data, traits):
 
     # Gold
     gold = st.sidebar.slider("Gold", value=100, min_value=1, max_value=150)
-
-    chosen_odds = list(chosen_data.iloc[level - 1])
-    # available_costs = [i + 1 for i in range(5) if chosen_odds[i] > 0]
-    # available_traits = traits[traits["cost"].isin(available_costs)]
 
     has_chosen = st.sidebar.checkbox("Already possess an Headliner?")
     show_next_level = st.sidebar.checkbox("Show next level odds?")
