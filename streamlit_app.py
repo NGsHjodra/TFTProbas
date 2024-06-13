@@ -5,7 +5,7 @@ from helpers import *
 
 PAGES = {
     "Rolling odds": roll,
-    "Headliner odds": chosen_roll,
+    # "Headliner odds": chosen_roll,
 }
 
 st.set_page_config(
@@ -55,10 +55,10 @@ def set_css():
 
 
 def set_body():
-    st.header("TFT Odds Tool - Set 10")
+    st.header("TFT Odds Tool - Set 11")
 
     github_repo = get_img_with_href(
-        "assets/github.png", "https://github.com/sde-cdsp/TFTProbas", text="Project: "
+        "assets/github.png", "https://github.com/NGsHjodra/TFTProbas", text="Project: "
     )
     credits = get_img_with_href(
         "assets/xlogo.png", "https://twitter.com/Toof_pro", text="Contact: "
@@ -80,16 +80,16 @@ def set_and_run_page():
 
     bin_str = get_base64_of_bin_file("assets/tft_t_logo.png")
     st.sidebar.image("assets/tft_t_logo.png", width=200)
-    selection = st.sidebar.radio("", list(PAGES.keys()), index=1)
-    st.sidebar.title("Settings")
+    # selection = st.sidebar.radio("", list(PAGES.keys()), index=1)
+    # st.sidebar.title("Settings")
 
-    page = PAGES[selection]
+    page = PAGES["Rolling odds"]
     page.main()
 
 
 def set_footer():
     st.write(
-        "<div style='bottom:10px; width: 850px; font-size:13px;'>This web app isn’t endorsed by Riot Games and doesn’t reflect the views or opinions of Riot Games or anyone officially involved in producing or managing League of Legends. League of Legends and Riot Games are trademarks or registered trademarks of Riot Games, Inc. League of Legends © Riot Games, Inc.</div>",
+        "<div style='bottom:10px; width: 850px; font-size:13px;'>This web app isn’t endorsed by Riot Games and doesn’t reflect the views or opinions of Riot Games or anyone officially involved in producing or managing League of Legends. League of Legends and Riot Games are trademarks or registered trademarks of Riot Games, Inc. League of Legends © Riot Games, Inc.Also I forked this from https://github.com/sde-cdsp/TFTProbas</div>",
         unsafe_allow_html=True,
     )
 
