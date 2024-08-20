@@ -55,7 +55,7 @@ def set_css():
 
 
 def set_body():
-    st.header("TFT Odds Tool - Set 11")
+    st.header("TFT Odds Tool - Set 12")
 
     github_repo = get_img_with_href(
         "assets/github.png", "https://github.com/NGsHjodra/TFTProbas", text="Project: "
