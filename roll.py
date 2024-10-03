@@ -41,7 +41,7 @@ def select_params(data):
     )
 
     # Level
-    level = st.sidebar.slider("Level", value=7, min_value=1, max_value=11)
+    level = st.sidebar.slider("Level", value=8, min_value=1, max_value=11)
 
     nb_copies = data[str(cost)]["pool"]
     nb_champs_costs = data[str(cost)]["n_champs"]
@@ -49,7 +49,7 @@ def select_params(data):
     # Number of copies of the champion already bought
     n_champ = st.sidebar.slider(
         "Number of your champion's copies out of pool",
-        value=3,
+        value=1,
         min_value=0,
         max_value=int(nb_copies),
     )
@@ -57,7 +57,7 @@ def select_params(data):
     # Number of cards of same cost already bought
     n_cost = st.sidebar.slider(
         f"Number of {cost} cost champions out of pool (excluding your champion)",
-        value=25,
+        value=15,
         min_value=0,
         max_value=nb_copies * nb_champs_costs - n_champ,
     )

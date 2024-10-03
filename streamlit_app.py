@@ -61,7 +61,7 @@ def set_body():
         "assets/github.png", "https://github.com/NGsHjodra/TFTProbas", text="Project: "
     )
     credits = get_img_with_href(
-        "assets/xlogo.png", "https://twitter.com/Toof_pro", text="Contact: "
+        "assets/xlogo.png", "https://x.com/NGs_Hjodra", text="Contact: "
     )
     st.markdown(
         """<hr style="height:2px;border:none;color:white;" /> """,
